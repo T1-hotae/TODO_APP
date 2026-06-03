@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+gradio
+sqlmodel
+groq
+requests
+python-dotenv
+pytest
+pydantic
+pydantic-settings
