@@ -11,7 +11,8 @@ router = APIRouter(prefix="/todos", tags=["todos"])
 def create_todo(todo: TodoCreate, session: Session = Depends(get_session)):
     return TodoService.create_todo(session, todo)
 
-@router.get("/", response_model=List[Todo])
+@router.get("", response_model=List[Todo])
+@router.get("/", response_model=List[Todo], include_in_schema=False)
 def read_todos(session: Session = Depends(get_session)):
     return TodoService.get_todos(session)
 

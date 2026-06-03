@@ -1,8 +1,8 @@
 from sqlmodel import SQLModel, create_engine, Session
-import os
+from pathlib import Path
 
-sqlite_file_name = "database.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
+DB_PATH = Path(__file__).resolve().parent.parent.parent / "database.db"
+sqlite_url = f"sqlite:///{DB_PATH}"
 
 connect_args = {"check_same_thread": False}
 engine = create_engine(sqlite_url, echo=True, connect_args=connect_args)

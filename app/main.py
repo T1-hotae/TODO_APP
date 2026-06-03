@@ -4,7 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import gradio as gr
 from app.api.database import init_db
 from app.api.routes import todos
-from app.todo_list import create_todo_ui
+from app.api.routes import ask
+from app.todo_list import create_todo_ui, PAGE_JS
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -27,8 +28,9 @@ app.add_middleware(
 )
 
 app.include_router(todos.router, prefix="/api")
+app.include_router(ask.router, prefix="/api")
 
-with gr.Blocks(title="Todo App") as demo:
+with gr.Blocks(title="Todo App", js=PAGE_JS) as demo:
     create_todo_ui()
 
 app = gr.mount_gradio_app(app, demo, path="/")
