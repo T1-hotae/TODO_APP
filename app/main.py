@@ -3,8 +3,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import gradio as gr
 from app.api.database import init_db
-from app.api.routes import todos
+from app.api.routes import todos, pomodoro
 from app.ui.components.todo_list import create_todo_ui
+from app.ui.components.pomodoro import create_pomodoro_ui
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,11 +32,16 @@ app.add_middleware(
 
 # API 라우터 등록
 app.include_router(todos.router, prefix="/api")
+app.include_router(pomodoro.router, prefix="/api")
 
 # Phase 3: Gradio UI 마운트
 with gr.Blocks(css="app/ui/styles/custom.css", title="ZenTodo") as demo:
     gr.Markdown("# 🧘 ZenTodo")
-    create_todo_ui()
+    with gr.Row():
+        with gr.Column(scale=2):
+            create_todo_ui()
+        with gr.Column(scale=1):
+            create_pomodoro_ui()
 
 app = gr.mount_gradio_app(app, demo, path="/")
 

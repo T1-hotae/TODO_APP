@@ -24,3 +24,9 @@ class TodoUpdate(SQLModel):
     category: Optional[str] = None
     due_date: Optional[datetime] = None
     is_completed: Optional[bool] = None
+
+class PomodoroSession(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    task_id: Optional[int] = Field(default=None, foreign_key="todo.id")
+    duration: int = Field(default=25) # 집중 시간(분)
+    completed_at: datetime = Field(default_factory=datetime.utcnow)
