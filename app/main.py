@@ -3,25 +3,21 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import gradio as gr
 from app.api.database import init_db
-from app.api.routes import todos, pomodoro
-from app.ui.components.todo_list import create_todo_ui
-from app.ui.components.pomodoro import create_pomodoro_ui
+from app.api.routes import todos
+from app.todo_list import create_todo_ui
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: 데이터베이스 테이블 생성 초기화
     init_db()
     yield
-    # Shutdown: 리소스 정리 (필요시)
 
 app = FastAPI(
-    title="ZenTodo REST API Server",
-    description="ZenTodo의 백엔드를 전담하는 REST API 서버입니다.",
+    title="Todo REST API",
+    description="간단한 Todo 앱 REST API",
     version="1.0.0",
     lifespan=lifespan
 )
 
-# CORS 설정
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -30,22 +26,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# API 라우터 등록
 app.include_router(todos.router, prefix="/api")
-app.include_router(pomodoro.router, prefix="/api")
 
-# Phase 3: Gradio UI 마운트
-with gr.Blocks(css="app/ui/styles/custom.css", title="ZenTodo") as demo:
-    gr.Markdown("# 🧘 ZenTodo")
-    with gr.Row():
-        with gr.Column(scale=2):
-            create_todo_ui()
-        with gr.Column(scale=1):
-            create_pomodoro_ui()
+with gr.Blocks(title="Todo App") as demo:
+    create_todo_ui()
 
 app = gr.mount_gradio_app(app, demo, path="/")
 
 @app.get("/api/health", tags=["health"])
 def health_check():
-    """서버 헬스 체크 엔드포인트"""
-    return {"status": "healthy", "service": "ZenTodo"}
+    return {"status": "healthy"}

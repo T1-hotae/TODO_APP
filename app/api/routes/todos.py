@@ -15,6 +15,13 @@ def create_todo(todo: TodoCreate, session: Session = Depends(get_session)):
 def read_todos(session: Session = Depends(get_session)):
     return TodoService.get_todos(session)
 
+@router.get("/{todo_id}", response_model=Todo)
+def read_todo(todo_id: int, session: Session = Depends(get_session)):
+    todo = session.get(Todo, todo_id)
+    if not todo:
+        raise HTTPException(status_code=404, detail="Todo not found")
+    return todo
+
 @router.patch("/{todo_id}", response_model=Todo)
 def update_todo(todo_id: int, todo: TodoUpdate, session: Session = Depends(get_session)):
     db_todo = TodoService.update_todo(session, todo_id, todo)
