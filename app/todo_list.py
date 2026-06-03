@@ -166,6 +166,11 @@ def create_todo_ui():
 
         # ── Tab 2: AI 질의응답 ────────────────────────────────────
         with gr.TabItem("🤖 AI 질의응답"):
+            gr.HTML(
+                '<div style="text-align:right;margin-bottom:8px;">'
+                '<a href="/chat" style="padding:5px 12px;background:#6366f1;color:#fff;'
+                'border-radius:6px;text-decoration:none;font-size:13px;">💬 채팅 모드 →</a></div>'
+            )
             gr.Markdown("저장된 Todo 목록을 바탕으로 질문하세요.")
 
             question_input = gr.Textbox(

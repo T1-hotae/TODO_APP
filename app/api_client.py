@@ -33,3 +33,15 @@ def ask_question(question: str) -> str:
         return res.json().get("answer", "응답을 가져올 수 없습니다.")
     except Exception as e:
         return f"오류: {e}"
+
+
+def chat_message(question: str, history: list[dict]) -> str:
+    try:
+        payload = {
+            "question": question,
+            "history": [{"role": m["role"], "content": m["content"]} for m in history],
+        }
+        res = requests.post(f"{BASE_URL}/chat", json=payload)
+        return res.json().get("answer", "응답을 가져올 수 없습니다.")
+    except Exception as e:
+        return f"오류: {e}"
